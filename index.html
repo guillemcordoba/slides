@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="Description" content="Put your description here." />
+    <base href="/" />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background-color: #ededed;
+        --r-main-font-size: 24px;
+      }
+
+      .slides {
+        width: 75% !important;
+      }
+      
+      .container {
+        top: 0 !important;
+        display: flex !important;
+        flex-direction: row !important;
+      }
+      .column {
+        flex: 1;
+      }
+
+      section {
+        text-align: left;
+      }
+      .details {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 400px;
+      }
+    </style>
+    <link rel="stylesheet" href="/node_modules/reveal.js/dist/reveal.css" />
+    <link
+      rel="stylesheet"
+      href="/node_modules/reveal.js/dist/theme/black.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/node_modules/reveal.js/plugin/highlight/monokai.css"
+    />
+    <title>slides-sl</title>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Rust Language Fundamentals</h1>
+        </section>
+
+        <section>
+          <h2>Why Rust?</h2>
+          <div class="container">
+            <div class="column">
+              <h3>A low level language</h3>
+
+              <li>Compiled, not interpreted</li>
+              <li>Enforces very strict rules</li>
+              <li>Goal: all errors at compile time</li>
+              <li>No segmentation faults</li>
+              <li>Semi-optimal garbage collection</li>
+            </div>
+
+            <div class="column">
+              <h3 class="fragment fade-in">Modern & high level features</h3>
+
+              <li>Great compiler & error messages</li>
+              <li>Iterators</li>
+              <li>
+                Functional programming features
+                <ul>
+                  <li>Function pointers & closures</li>
+                  <li>Higher order functions</li>
+                </ul>
+              </li>
+              <li>Package manager</li>
+              <li>Testing framework</li>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Variable Consumption</h3>
+
+          <li>One of Rust's most distinctive features</li>
+          <li>Allows the compiler to prevent many kinds of error</li>
+          <li>A constraint on how you write code</li>
+          <li>When you reference certain variables, they become "consumed"</li>
+          <li>A consumed variable cannot be referenced again later</li>
+        </section>
+
+        <section>
+          <h3>Categories of Typed Variables</h3>
+          <div style="position: relative">
+            <h4>Scalars (unconsumable)</h4>
+            <li>Boolean</li>
+            <li>
+              Integer
+
+              <ul class="details fragment fade-in-then-out">
+                <li>
+                  Unsigned
+                  <ul>
+                    <li>u8 through u64</li>
+                    <li>usize (based on machine architecture)</li>
+                  </ul>
+                </li>
+                <li>
+                  Signed
+                  <ul>
+                    <li>i8 through i64</li>
+                    <li>isize (based on machine architecture)</li>
+                  </ul>
+                </li>
+                <li>
+                  Extra credit
+                  <ul>
+                    <li>Other base systems (binary, hex, octal)</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              Float
+
+              <ul class="details fragment fade-in-then-out">
+                <li>
+                  Signed
+                  <ul>
+                    <li>f32 and f64</li>
+                    <li>Default is f64</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>Char</li>
+            <li>Unit type</li>
+            <li>Str literal*</li>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script type="module">
+      import Reveal from "reveal.js";
+      import Markdown from "reveal.js/plugin/markdown/markdown.esm.js";
+      import RevealHighlight from "reveal.js/plugin/highlight/highlight.esm.js";
+      import RevealNotes from "reveal.js/plugin/notes/notes.esm.js";
+      var getParents = function (elem) {
+        // Set up a parent array
+        var parents = [];
+
+        // Push each parent element to the array
+        for (; elem && elem !== document; elem = elem.parentNode) {
+          parents.push(elem);
+        }
+
+        // Return our parent array
+        return parents;
+      };
+
+      function hasClass(elem, clas) {
+        return elem.classList.contains(clas);
+      }
+
+      function addFragmentToParents(elem) {
+        // event.fragment = the fragment DOM element
+        const parentFragments = getParents(elem).filter((e) =>
+          hasClass(e, "fragment")
+        );
+        for (const el of parentFragments) {
+          el.classList.add("current-fragment");
+        }
+      }
+
+      const fragmentStyles = [
+        "fade-out",
+        "fade-up",
+        "fade-down",
+        "fade-left",
+        "fade-right",
+        "fade-in-then-out",
+        "fade-in-then-semi-out",
+        "grow",
+        "semi-fade-out",
+        "shrink",
+        "strike",
+        "highlight-red",
+        "highlight-green",
+        "highlight-blue",
+        "highlight-current-red",
+        "highlight-current-green",
+        "highlight-current-blue",
+      ];
+
+      const plugin = () => ({
+        id: "test",
+        init: (deck) => {
+          const elements = document.querySelectorAll("li");
+          elements.forEach((el) => {
+            if (
+              !Array.from(el.classList).find((c) => fragmentStyles.includes(c))
+            ) {
+              el.classList.add("fade-in-then-semi-out");
+            }
+            el.classList.add("fragment");
+          });
+
+          deck.on("fragmentshown", (event) => {
+            console.log(event.fragment.classList);
+            if (event.fragment.classList.contains("details")) {
+              deck.nextFragment();
+            }
+            addFragmentToParents(event.fragment.parentNode);
+          });
+          deck.on("fragmenthidden", (event) => {
+            if (event.fragment.parentNode.classList.contains("details")) {
+              deck.prevFragment();
+            }
+
+            addFragmentToParents(event.fragment.parentNode);
+          });
+        },
+      });
+
+      let deck = new Reveal({
+        transition: "none",
+        plugins: [Markdown, RevealHighlight, RevealNotes, plugin],
+      });
+      deck.initialize();
+    </script>
+  </body>
+</html>
